@@ -1,6 +1,9 @@
 #pragma once
 #include <random>
 
+void init_random() {
+	srand(std::time(0));
+}
 // returns [0,1]
 float random() {
 	return rand() / (float)RAND_MAX;

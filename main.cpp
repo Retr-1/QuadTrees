@@ -1,38 +1,93 @@
 
 #define OLC_PGE_APPLICATION
 #include "olcPixelGameEngine.h"
+#include "transformed_view.h"
+#include "Random.h"
+
+class Rect {
+public:
+	olc::vf2d pos;
+	olc::vf2d size;
+	olc::Pixel color;
+
+	bool contains(const Rect& rect) {
+		return pos.x <= rect.pos.x && pos.y <= rect.pos.y && pos.x + size.x >= rect.pos.x + rect.size.x && pos.y + size.y >= rect.pos.y + rect.size.y;
+	}
+
+	bool contains(const olc::vf2d& pos2) {
+		return pos.x <= pos2.x && pos.y <= pos2.y && pos.x + size.x >= pos2.x && pos.y + size.y >= pos2.y;
+	}
+
+	bool overlaps(const Rect& rect) {
+		return contains(rect.pos) || contains(rect.pos + rect.size);
+	}
+
+	void draw(olc::PixelGameEngine& canvas) {
+		canvas.FillRect(pos, size, color);
+	}
+
+	void draw(olc::PixelGameEngine& canvas, const TranformedView& tv) {
+		olc::vi2d start = tv.world_to_screen(pos);
+		auto end_screen = pos + size;
+		olc::vi2d end = tv.world_to_screen(end_screen);
+		olc::vi2d size = end - start;
+		canvas.FillRect(tv.world_to_screen(pos), end-pos, color);
+	}
+};
 
 // Override base class with your custom functionality
-class Example : public olc::PixelGameEngine
+class Window : public olc::PixelGameEngine
 {
+	int n_rects = 100;
+	std::vector<Rect> rectangles;
+	TranformedView tv;
+	olc::vi2d prev_mouse;
+
 public:
-	Example()
+	Window()
 	{
 		// Name your application
-		sAppName = "Example";
+		sAppName = "Window";
 	}
 
 public:
 	bool OnUserCreate() override
 	{
+		init_random();
 		// Called once at the start, so create things here
+		for (int i = 0; i < n_rects; i++) {
+			Rect rect;
+			rect.pos = { random() * 1000, random() * 1000 };
+			rect.size = { random() * 200, random() * 200 };
+			rect.color = olc::Pixel(randint(0, 255), randint(0, 255), randint(0, 255));
+			rectangles.push_back(rect);
+		}
+		
 		return true;
 	}
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
 		// Called once per frame, draws random coloured pixels
-		for (int x = 0; x < ScreenWidth(); x++)
-			for (int y = 0; y < ScreenHeight(); y++)
-				Draw(x, y, olc::Pixel(rand() % 256, rand() % 256, rand() % 256));
+		if (GetMouse(0).bHeld) {
+			olc::vf2d delta = GetMousePos() - prev_mouse;
+			tv.translate(delta);
+		}
+		prev_mouse = GetMousePos();
+		
+		Clear(olc::BLACK);
+		for (Rect& rect : rectangles) {
+			rect.draw(*this, tv);
+		}
+
 		return true;
 	}
 };
 
 int main()
 {
-	Example win;
-	if (win.Construct(256, 240, 4, 4))
+	Window win;
+	if (win.Construct(800, 800, 1, 1))
 		win.Start();
 	return 0;
 }

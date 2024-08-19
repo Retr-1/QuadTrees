@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="olcPixelGameEngine.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="transformed_view.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
