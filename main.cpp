@@ -37,7 +37,7 @@ public:
 // Override base class with your custom functionality
 class Window : public olc::PixelGameEngine
 {
-	int n_rects = 100;
+	int n_rects = 100000;
 	std::vector<Rect> rectangles;
 	TranformedView tv;
 	olc::vi2d prev_mouse;
@@ -56,8 +56,8 @@ public:
 		// Called once at the start, so create things here
 		for (int i = 0; i < n_rects; i++) {
 			Rect rect;
-			rect.pos = { random() * 1000, random() * 1000 };
-			rect.size = { random() * 200, random() * 200 };
+			rect.pos = { random2() * 10000, random2() * 10000 };
+			rect.size = { random() * 100, random() * 100 };
 			rect.color = olc::Pixel(randint(0, 255), randint(0, 255), randint(0, 255));
 			rectangles.push_back(rect);
 		}
@@ -72,10 +72,10 @@ public:
 			olc::vf2d delta = GetMousePos() - prev_mouse;
 			tv.translate(delta);
 		}
-		if (GetKey(olc::UP).bPressed) {
+		if (GetKey(olc::UP).bHeld) {
 			tv.zoom_in(GetMousePos());
 		}
-		if (GetKey(olc::DOWN).bPressed) {
+		if (GetKey(olc::DOWN).bHeld) {
 			/*olc::vf2d m = GetMousePos();
 			tv.zoom_out(m);*/
 			tv.zoom_out(GetMousePos());
