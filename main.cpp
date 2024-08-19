@@ -28,10 +28,9 @@ public:
 
 	void draw(olc::PixelGameEngine& canvas, const TranformedView& tv) {
 		olc::vi2d start = tv.world_to_screen(pos);
-		auto end_screen = pos + size;
-		olc::vi2d end = tv.world_to_screen(end_screen);
-		olc::vi2d size = end - start;
-		canvas.FillRect(tv.world_to_screen(pos), end-pos, color);
+		auto end_world = pos + size;
+		olc::vi2d end = tv.world_to_screen(end_world);
+		canvas.FillRect(start, end-start, color);
 	}
 };
 
