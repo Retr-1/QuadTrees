@@ -13,24 +13,30 @@ public:
 		screen_size = size;
 		scale = size;
 	}*/
-	void zoom_in(olc::vf2d& mouse) {
-		scale += zoom_sens;
-	}
-
-	void zoom_out(olc::vf2d& mouse) {
+	void zoom_in(const olc::vf2d& mouse) {
+		auto mouse_world_before = screen_to_world(mouse);
 		scale -= zoom_sens;
+		auto mouse_screen_after = world_to_screen(mouse_world_before);
+		translate(mouse-mouse_screen_after);
 	}
 
-	void translate(olc::vf2d& direction) {
+	void zoom_out(const olc::vf2d& mouse) {
+		auto mouse_world_before = screen_to_world(mouse);
+		scale += zoom_sens;
+		auto mouse_screen_after = world_to_screen(mouse_world_before);
+		translate(mouse - mouse_screen_after);
+	}
+
+	void translate(const olc::vf2d& direction) {
 		offset_screen -= direction;
 	}
 
-	olc::vf2d screen_to_world(olc::vf2d& pos) const {
+	olc::vf2d screen_to_world(const olc::vf2d& pos) const {
 		return (pos + offset_screen) * scale;
 		// world = (screen + offset) * scale
 	}
 
-	olc::vf2d world_to_screen(olc::vf2d& pos) const {
+	olc::vf2d world_to_screen(const olc::vf2d& pos) const {
 		return pos / scale - offset_screen;
 	}
 };

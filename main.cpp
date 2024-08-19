@@ -72,6 +72,14 @@ public:
 			olc::vf2d delta = GetMousePos() - prev_mouse;
 			tv.translate(delta);
 		}
+		if (GetKey(olc::UP).bPressed) {
+			tv.zoom_in(GetMousePos());
+		}
+		if (GetKey(olc::DOWN).bPressed) {
+			/*olc::vf2d m = GetMousePos();
+			tv.zoom_out(m);*/
+			tv.zoom_out(GetMousePos());
+		}
 		prev_mouse = GetMousePos();
 		
 		Clear(olc::BLACK);
