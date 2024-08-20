@@ -49,7 +49,7 @@ class StaticQuadTree {
 public:
 	size_t max_depth = 10;
 
-	StaticQuadTree(Rect& area, size_t depth) : depth(depth) {
+	StaticQuadTree(const Rect& area, size_t depth) : depth(depth) {
 		olc::vf2d half_size = area.size / 2;
 		areas[0].pos = area.pos;
 		areas[1].pos = { area.pos.x + half_size.x, area.pos.y };
@@ -90,9 +90,8 @@ class StaticQuadTreeContainer {
 	StaticQuadTree<Data*> sqt;
 
 public:
-	StaticQuadTreeContainer(Rect& area) : sqt(area,0) {
-
-	}
+	StaticQuadTreeContainer(const Rect& area) : sqt(area, 0) {}
+	//StaticQuadTreeContainer(Rect&& area) : sqt(area, 0) {}
 
 	std::vector<Data*> search(Rect& area) {
 		return sqt.search(area);

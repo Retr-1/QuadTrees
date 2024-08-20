@@ -4,9 +4,11 @@
 
 class Rect {
 public:
+	Rect(olc::vf2d& pos, olc::vf2d& size) : pos(pos), size(size) {}
+	Rect() {}
+
 	olc::vf2d pos;
 	olc::vf2d size;
-	olc::Pixel color;
 
 	bool contains(const Rect& rect) {
 		return pos.x <= rect.pos.x && pos.y <= rect.pos.y && pos.x + size.x >= rect.pos.x + rect.size.x && pos.y + size.y >= rect.pos.y + rect.size.y;
@@ -19,6 +21,13 @@ public:
 	bool overlaps(const Rect& rect) {
 		return contains(rect.pos) || contains(rect.pos + rect.size);
 	}
+};
+
+class DrawingRect : public Rect {
+public:
+	olc::Pixel color;
+
+	using Rect::Rect;
 
 	void draw(olc::PixelGameEngine& canvas) {
 		canvas.FillRect(pos, size, color);
