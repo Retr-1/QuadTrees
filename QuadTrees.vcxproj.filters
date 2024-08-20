@@ -29,5 +29,11 @@
     <ClInclude Include="transformed_view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="quad_tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

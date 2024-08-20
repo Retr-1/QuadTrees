@@ -3,37 +3,13 @@
 #include "olcPixelGameEngine.h"
 #include "transformed_view.h"
 #include "Random.h"
+#include "rect.h"
 #include <chrono>
+#include "quad_tree.h"
 
-class Rect {
-public:
-	olc::vf2d pos;
-	olc::vf2d size;
-	olc::Pixel color;
 
-	bool contains(const Rect& rect) {
-		return pos.x <= rect.pos.x && pos.y <= rect.pos.y && pos.x + size.x >= rect.pos.x + rect.size.x && pos.y + size.y >= rect.pos.y + rect.size.y;
-	}
 
-	bool contains(const olc::vf2d& pos2) {
-		return pos.x <= pos2.x && pos.y <= pos2.y && pos.x + size.x >= pos2.x && pos.y + size.y >= pos2.y;
-	}
 
-	bool overlaps(const Rect& rect) {
-		return contains(rect.pos) || contains(rect.pos + rect.size);
-	}
-
-	void draw(olc::PixelGameEngine& canvas) {
-		canvas.FillRect(pos, size, color);
-	}
-
-	void draw(olc::PixelGameEngine& canvas, const TranformedView& tv) {
-		olc::vi2d start = tv.world_to_screen(pos);
-		auto end_world = pos + size;
-		olc::vi2d end = tv.world_to_screen(end_world);
-		canvas.FillRect(start, end-start, color);
-	}
-};
 
 // Override base class with your custom functionality
 class Window : public olc::PixelGameEngine
