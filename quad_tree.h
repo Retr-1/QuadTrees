@@ -2,6 +2,7 @@
 #include "rect.h"
 #include <array>
 #include <memory>
+#include <list>
 
 template <typename Data>
 class StaticQuadTree {
@@ -19,13 +20,12 @@ class StaticQuadTree {
 
 	void search(Rect& area, std::vector<Data>& data) {
 		for (int i = 0; i < 4; i++) {
-			if (areas[i].contains(area)) {
-				if (children[i])
-					children[i]->dump_items(data);
-			}
-			else if (areas[i].overlaps(area)) 
+			if (children[i])
 			{
-				if (children[i])
+				if (areas[i].contains(area))
+					children[i]->dump_items(data);
+
+				else if (areas[i].overlaps(area))
 					children[i]->search(area, data);
 			}
 		}
@@ -81,5 +81,26 @@ public:
 		}
 
 		items.push_back({ data, area });
+	}
+};
+
+template <typename Data>
+class StaticQuadTreeContainer {
+	std::list<Data> items;
+	StaticQuadTree<Data*> sqt;
+
+public:
+	StaticQuadTreeContainer(Rect& area) : sqt(area,0) {
+
+	}
+
+	std::vector<Data*> search(Rect& area) {
+		return sqt.search(area);
+	}
+
+	void insert(Rect& area, Data& data) {
+		items.push_back(data);
+		Data* element = &items.back();
+		sqt.insert(area, element);
 	}
 };
