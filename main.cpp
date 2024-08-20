@@ -3,6 +3,7 @@
 #include "olcPixelGameEngine.h"
 #include "transformed_view.h"
 #include "Random.h"
+#include <chrono>
 
 class Rect {
 public:
@@ -83,9 +84,20 @@ public:
 		prev_mouse = GetMousePos();
 		
 		Clear(olc::BLACK);
+		Rect screen;
+		screen.pos = tv.screen_to_world({ 0,0 });
+		screen.size = tv.screen_to_world(GetScreenSize()) - screen.pos;
+		int c = 0;
+		auto start_time = std::chrono::system_clock::now();
 		for (Rect& rect : rectangles) {
-			rect.draw(*this, tv);
+			if (screen.overlaps(rect)) {
+				rect.draw(*this, tv);
+				c++;
+			}
 		}
+		std::chrono::duration<float> time_delta = std::chrono::system_clock::now() - start_time;
+		DrawString({ 0,0 }, "rectangles: " + std::to_string(c), olc::WHITE, 2U);
+		DrawString({ 400, 0 }, "Linear: " + std::to_string(time_delta.count()),olc::WHITE,2U);
 
 		return true;
 	}
