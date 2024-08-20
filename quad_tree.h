@@ -4,7 +4,7 @@
 #include <memory>
 #include <list>
 
-constexpr size_t max_depth = 8;
+constexpr size_t max_depth = 10;
 
 template <typename Data>
 class StaticQuadTree {
@@ -24,10 +24,10 @@ class StaticQuadTree {
 		for (int i = 0; i < 4; i++) {
 			if (children[i])
 			{
-				if (areas[i].contains(area))
+				if (area.contains(areas[i]))
 					children[i]->dump_items(data);
 
-				else if (areas[i].overlaps(area))
+				else if (area.overlaps(areas[i]))
 					children[i]->search(area, data);
 			}
 		}

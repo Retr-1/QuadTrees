@@ -10,7 +10,7 @@
 // Override base class with your custom functionality
 class Window : public olc::PixelGameEngine
 {
-	int n_rects = 100000;
+	int n_rects = 1000000;
 	std::vector<DrawingRect> rectangles;
 	TranformedView tv;
 	olc::vi2d prev_mouse;
@@ -31,7 +31,7 @@ public:
 		// Called once at the start, so create things here
 		Rect visible;
 		visible.pos = { 0,0 };
-		visible.size = { 10000,10000 };
+		visible.size = { 1000000,1000000 };
 
 		sqt = StaticQuadTreeContainer<DrawingRect>(visible);
 		
@@ -93,10 +93,8 @@ public:
 			int c = 0;
 			auto start_time = std::chrono::system_clock::now();
 			for (DrawingRect* rect : sqt.search(screen)) {
-				if (screen.overlaps(*rect)) {
-					rect->draw(*this, tv);
-					c++;
-				}
+				rect->draw(*this, tv);
+				c++;
 			}
 			std::chrono::duration<float> time_delta = std::chrono::system_clock::now() - start_time;
 			DrawString({ 0,0 }, "rectangles: " + std::to_string(c), olc::WHITE, 2U);
