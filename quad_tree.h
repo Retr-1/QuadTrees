@@ -4,6 +4,8 @@
 #include <memory>
 #include <list>
 
+constexpr size_t max_depth = 8;
+
 template <typename Data>
 class StaticQuadTree {
 
@@ -47,7 +49,6 @@ class StaticQuadTree {
 	}
 
 public:
-	size_t max_depth = 10;
 
 	StaticQuadTree(const Rect& area, size_t depth) : depth(depth) {
 		olc::vf2d half_size = area.size / 2;

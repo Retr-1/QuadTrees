@@ -18,8 +18,8 @@ public:
 		return pos.x <= pos2.x && pos.y <= pos2.y && pos.x + size.x >= pos2.x && pos.y + size.y >= pos2.y;
 	}
 
-	bool overlaps(const Rect& rect) {
-		return contains(rect.pos) || contains(rect.pos + rect.size);
+	bool overlaps(const Rect& other) {
+		return pos.x + size.x >= other.pos.x && pos.x <= other.pos.x + other.size.x && pos.y + size.y >= other.pos.y && pos.y < other.pos.y + other.size.y;
 	}
 };
 

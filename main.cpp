@@ -100,7 +100,7 @@ public:
 			}
 			std::chrono::duration<float> time_delta = std::chrono::system_clock::now() - start_time;
 			DrawString({ 0,0 }, "rectangles: " + std::to_string(c), olc::WHITE, 2U);
-			DrawString({ 400, 0 }, "Linear: " + std::to_string(time_delta.count()), olc::WHITE, 2U);
+			DrawString({ 400, 0 }, "QuadTree: " + std::to_string(time_delta.count()), olc::WHITE, 2U);
 		}
 
 		return true;
