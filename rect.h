@@ -2,9 +2,10 @@
 #include "olcPixelGameEngine.h"
 #include "transformed_view.h"
 
+
 class Rect {
 public:
-	Rect(olc::vf2d& pos, olc::vf2d& size) : pos(pos), size(size) {}
+	Rect(const olc::vf2d& pos, const olc::vf2d& size) : pos(pos), size(size) {}
 	Rect() {}
 
 	olc::vf2d pos;
@@ -20,6 +21,12 @@ public:
 
 	bool overlaps(const Rect& other) {
 		return pos.x + size.x >= other.pos.x && pos.x <= other.pos.x + other.size.x && pos.y + size.y >= other.pos.y && pos.y < other.pos.y + other.size.y;
+	}
+
+	Rect screen_to_world(TranformedView& tv) {
+		auto tl = tv.screen_to_world(pos);
+		auto br = tv.screen_to_world(pos + size);
+		return Rect(tl, br - tl);
 	}
 };
 

@@ -28,6 +28,7 @@ public:
 	{
 		init_random();
 		// Called once at the start, so create things here
+
 		Rect visible;
 		visible.pos = { 0,0 };
 		visible.size = { 100000,100000 };
@@ -63,6 +64,20 @@ public:
 			tv.zoom_out(GetMousePos());
 		}
 		prev_mouse = GetMousePos();
+
+		// removing objects
+		const olc::vf2d remove_area_size(100, 100);
+		DrawingRect remove_area = DrawingRect(GetMousePos() - remove_area_size, remove_area_size * 2);
+		remove_area.color = olc::Pixel(128, 128, 128, 128);
+
+		Rect remove_area_world = remove_area.screen_to_world(tv);
+
+		if (GetMouse(olc::Mouse::RIGHT).bHeld) {
+			auto results = dqt.search(remove_area_world);
+			for (auto& item : results) {
+				dqt.remove(*item);
+			}
+		}
 		
 		Clear(olc::BLACK);
 		Rect screen;
@@ -74,6 +89,9 @@ public:
 			ic->data.draw(*this, tv);
 			c++;
 		}
+		SetPixelMode(olc::Pixel::Mode::ALPHA);
+		remove_area.draw(*this);
+		SetPixelMode(olc::Pixel::Mode::NORMAL);
 		std::chrono::duration<float> time_delta = std::chrono::system_clock::now() - start_time;
 		DrawString({ 0,0 }, "rectangles: " + std::to_string(c), olc::WHITE, 2U);
 		DrawString({ 400, 0 }, "QuadTree: " + std::to_string(time_delta.count()), olc::WHITE, 2U);
