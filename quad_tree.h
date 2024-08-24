@@ -193,7 +193,6 @@ public:
 		}
 
 		items.push_back({ data, area });
-		/*return std::make_pair(&items, std::prev(items.end()));*/
 		return { &items, std::prev(items.end()) };
 	}
 };
@@ -201,21 +200,15 @@ public:
 template <typename Data>
 class DynamicQuadTreeContainer {
 
-	//struct Properties {
-	//	std::list<DynamicQuadTree<Data*>::Item>* container;
-	//	std::list<DynamicQuadTree<Data*>::Item>::iterator position;
-	//};
 	typedef std::list<Data>::iterator item_itr;
 	typedef DynamicQuadTree<item_itr> DQT;
 
 	std::list<Data> items;
 	std::unordered_map<item_itr, DQT::ItemLocation> memory;
 	DQT dqt;
-	//std::unordered_map<
 
 public:
 	DynamicQuadTreeContainer(const Rect& area) : dqt(area, 0) {}
-	//StaticQuadTreeContainer(Rect&& area) : dqt(area, 0) {}
 
 	std::vector<item_itr> search(Rect& area) {
 		return dqt.search(area);
@@ -226,7 +219,8 @@ public:
 		item_itr element = std::prev(items.end());
 		DQT::ItemLocation loc = dqt.insert(area, element);
 		memory[element] = loc;
-		//item_properties.insert(element, p);
+		//memory.insert(element, loc);
+		
 	}
 
 	void remove(item_itr& item) {
