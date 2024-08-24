@@ -179,7 +179,7 @@ public:
 		return data;
 	}
 
-	 ItemLocation insert(Rect& area, Data& data) {
+	 ItemLocation insert(const Rect& area, const Data& data) {
 		if (depth < max_depth)
 		{
 			for (int i = 0; i < 4; i++) {
@@ -197,35 +197,38 @@ public:
 	}
 };
 
+
 template <typename Data>
 class DynamicQuadTreeContainer {
+public:
+	struct ItemContainer {
+		Data data;
+		std::list<ItemContainer>::iterator itr;
+		DynamicQuadTree<ItemContainer*>::ItemLocation dqt_loc;
+	};
 
-	typedef std::list<Data>::iterator item_itr;
-	typedef DynamicQuadTree<item_itr> DQT;
-
-	std::list<Data> items;
-	std::unordered_map<item_itr, DQT::ItemLocation> memory;
-	DQT dqt;
+private:
+	std::list<ItemContainer> items;
+	DynamicQuadTree<ItemContainer*> dqt;
 
 public:
 	DynamicQuadTreeContainer(const Rect& area) : dqt(area, 0) {}
 
-	std::vector<item_itr> search(Rect& area) {
+	std::vector<ItemContainer*> search(Rect& area) {
 		return dqt.search(area);
 	}
 
 	void insert(Rect& area, Data& data) {
-		items.push_back(data);
-		item_itr element = std::prev(items.end());
-		DQT::ItemLocation loc = dqt.insert(area, element);
-		memory[element] = loc;
-		//memory.insert(element, loc);
-		
+		items.push_back(ItemContainer());
+		ItemContainer& ic = items.back();
+		ic.data = data;
+		ic.itr = std::prev(items.end());
+		const DynamicQuadTree<ItemContainer*>::ItemLocation& dqt_loc = dqt.insert(area, &ic);
+		ic.dqt_loc = dqt_loc;
 	}
 
-	void remove(item_itr& item) {
-		DQT::ItemLocation& loc = memory.at(item);
-		loc.container->erase(loc.position);
-		items.erase(item);
+	void remove(ItemContainer& ic) {
+		ic.dqt_loc.container->erase(ic.dqt_loc.position);
+		items.erase(ic.itr);
 	}
 };

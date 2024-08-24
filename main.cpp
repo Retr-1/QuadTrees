@@ -10,7 +10,7 @@
 // Override base class with your custom functionality
 class Window : public olc::PixelGameEngine
 {
-	int n_rects = 1000000;
+	int n_rects = 10000;
 	std::vector<DrawingRect> rectangles;
 	TranformedView tv;
 	olc::vi2d prev_mouse;
@@ -30,14 +30,14 @@ public:
 		// Called once at the start, so create things here
 		Rect visible;
 		visible.pos = { 0,0 };
-		visible.size = { 1000000,1000000 };
+		visible.size = { 100000,100000 };
 		
 		dqt = DynamicQuadTreeContainer<DrawingRect>(visible);
 		
 		for (int i = 0; i < n_rects; i++) {
 			DrawingRect rect;
 			rect.pos = { random() * visible.size.x, random() * visible.size.y };
-			rect.size = { random() * 100, random() * 100 };
+			rect.size = { random() * 300, random() * 300 };
 			rect.color = olc::Pixel(randint(0, 255), randint(0, 255), randint(0, 255));
 			rectangles.push_back(rect);
 			dqt.insert(rect, rect);
@@ -70,8 +70,8 @@ public:
 		screen.size = tv.screen_to_world(GetScreenSize()) - screen.pos;
 		int c = 0;
 		auto start_time = std::chrono::system_clock::now();
-		for (auto& rect : dqt.search(screen)) {
-			rect->draw(*this, tv);
+		for (auto& ic : dqt.search(screen)) {
+			ic->data.draw(*this, tv);
 			c++;
 		}
 		std::chrono::duration<float> time_delta = std::chrono::system_clock::now() - start_time;
