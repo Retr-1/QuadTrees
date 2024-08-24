@@ -70,9 +70,8 @@ public:
 		DrawingRect remove_area = DrawingRect(GetMousePos() - remove_area_size, remove_area_size * 2);
 		remove_area.color = olc::Pixel(128, 128, 128, 128);
 
-		Rect remove_area_world = remove_area.screen_to_world(tv);
-
 		if (GetMouse(olc::Mouse::RIGHT).bHeld) {
+			Rect remove_area_world = remove_area.screen_to_world(tv);
 			auto results = dqt.search(remove_area_world);
 			for (auto& item : results) {
 				dqt.remove(*item);
